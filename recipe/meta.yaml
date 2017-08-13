@@ -63,6 +63,14 @@ about:
   summary: 'Natural Language Toolkit'
   dev_url: https://github.com/nltk/nltk
   doc_url: http://www.nltk.org/
+  summary: Build Python programs to work with human language data
+  description: |
+    NLTK has been called a wonderful tool for teaching and working in
+    computational linguistics using Python and an amazing library to play with
+    natural language.
+  doc_url: https://nltk.readthedocs.io/en/latest/
+  doc_source_url: https://github.com/nltk/nltk/blob/develop/web/index.rst
+  dev_url: https://github.com/nltk/nltk
 
 extra:
   recipe-maintainers:
