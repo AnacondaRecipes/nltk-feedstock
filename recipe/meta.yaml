@@ -56,6 +56,11 @@ about:
   license: Apache 2.0
   license_family: Apache
   summary: 'Natural Language Toolkit'
+  description: |
+    NLTK has been called a wonderful tool for teaching and working in
+    computational linguistics using Python and an amazing library to play with
+    natural language.
+  doc_source_url: https://github.com/nltk/nltk/blob/develop/web/index.rst
   dev_url: https://github.com/nltk/nltk
   doc_url: http://www.nltk.org/
 
