@@ -70,9 +70,6 @@ about:
   license_file: LICENSE.txt
   license: Apache 2.0
   license_family: Apache
-  summary: 'Natural Language Toolkit'
-  dev_url: https://github.com/nltk/nltk
-  doc_url: http://www.nltk.org/
   summary: Build Python programs to work with human language data
   description: |
     NLTK has been called a wonderful tool for teaching and working in
