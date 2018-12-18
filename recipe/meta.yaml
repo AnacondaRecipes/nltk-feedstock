@@ -1,8 +1,8 @@
 {% set name = "nltk" %}
-{% set version = "3.3.0" %}
+{% set version = "3.4" %}
 {% set bundle = "zip" %}
 {% set hash_type = "sha256" %}
-{% set hash = "fe0eda251be65843be86d7de9abfbf7161732256f742e623b21243ec47bdb718" %}
+{% set hash = "286f6797204ffdb52525a1d21ec0a221ec68b8e3fa4f2d25f412ac8e63c70e8d" %}
 {% set build = 0 %}
 
 package:
