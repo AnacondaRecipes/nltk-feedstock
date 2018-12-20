@@ -3,7 +3,7 @@
 {% set bundle = "zip" %}
 {% set hash_type = "sha256" %}
 {% set hash = "286f6797204ffdb52525a1d21ec0a221ec68b8e3fa4f2d25f412ac8e63c70e8d" %}
-{% set build = 0 %}
+{% set build = 1 %}
 
 package:
   name: {{ name }}
@@ -15,7 +15,6 @@ source:
   {{ hash_type }}: {{ hash }}
 
 build:
-  noarch: python
   number: {{ build }}
   script: python setup.py install --single-version-externally-managed --record=record.txt
 
@@ -27,15 +26,6 @@ requirements:
   run:
     - python
     - six
-    - gensim
-    - numpy
-    - python-crfsuite
-    - scikit-learn
-    - scipy
-    - matplotlib
-    - pyparsing
-    - twython
-    - requests
 
 test:
   imports:
