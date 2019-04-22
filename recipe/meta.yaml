@@ -1,31 +1,26 @@
-{% set name = "nltk" %}
-{% set version = "3.4" %}
-{% set bundle = "zip" %}
-{% set hash_type = "sha256" %}
-{% set hash = "286f6797204ffdb52525a1d21ec0a221ec68b8e3fa4f2d25f412ac8e63c70e8d" %}
-{% set build = 1 %}
+{% set version = "3.4.1" %}
 
 package:
-  name: {{ name }}
+  name: nltk
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.{{ bundle }}
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ bundle }}
-  {{ hash_type }}: {{ hash }}
+  url: https://pypi.io/packages/source/n/nltk/nltk-{{ version }}.zip
+  sha256: 3a64b1cb685bbf344adec416871fee07996671c876ff313b3e504158fa1500e1
 
 build:
-  number: {{ build }}
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
 
 requirements:
   host:
     - python
-    - setuptools
+    - pip
 
   run:
     - python
     - six
+    - singledispatch  # [py27]
 
 test:
   imports:
