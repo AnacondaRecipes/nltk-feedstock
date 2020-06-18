@@ -1,4 +1,4 @@
-{% set version = "3.4.4" %}
+{% set version = "3.5" %}
 
 package:
   name: nltk
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/n/nltk/nltk-{{ version }}.zip
-  sha256: 764c20a5f8532a681c261af3c7d1a54768a35df6f3603df75e615cbd34e47cb5
+  sha256: 845365449cd8c5f9731f7cb9f8bd6fd0767553b9d53af9eb1b3abf7700936b35
 
 build:
   number: 0
@@ -15,12 +15,14 @@ build:
 
 requirements:
   host:
-    - python
+    - python >=3.5
     - pip
-    - unzip
   run:
-    - python
-    - six
+    - python >=3.5
+    - click
+    - joblib
+    - regex
+    - tqdm
 
 test:
   imports:
