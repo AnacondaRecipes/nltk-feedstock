@@ -10,6 +10,7 @@ source:
 
 build:
   number: 0
+  skip: True  # [py<36]
   noarch: python
   script: "{{ PYTHON }} -m pip install . --no-deps -vv"
   entry_points:
@@ -17,12 +18,12 @@ build:
 
 requirements:
   host:
-    - python >=3.6,<3.10
+    - python
     - pip
     - setuptools
     - wheel
   run:
-    - python >=3.6,<3.10
+    - python >=3.6
     - click
     - joblib
     - regex >=2021.8.3
@@ -57,6 +58,7 @@ test:
     - nltk.translate
     - nltk.twitter
   requires:
+    - python <3.10
     - pip
     # tqdm and click requires colorama
     - colorama  # [win]
