@@ -25,7 +25,7 @@ requirements:
     - python >=3.6
     - click
     - joblib
-    - regex
+    - regex >=2021.8.3
     - tqdm
 
 test:
