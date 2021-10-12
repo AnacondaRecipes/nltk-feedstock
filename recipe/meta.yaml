@@ -27,6 +27,8 @@ requirements:
     - joblib
     - regex >=2021.8.3
     - tqdm
+    # tqdm and click requires colorama
+    - colorama  # [win]
 
 test:
   imports:
