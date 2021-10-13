@@ -1,4 +1,4 @@
-{% set version = "3.6.3" %}
+{% set version = "3.6.5" %}
 
 package:
   name: nltk
@@ -6,10 +6,11 @@ package:
 
 source:
   url: https://pypi.io/packages/source/n/nltk/nltk-{{ version }}.zip
-  sha256: 5db64a976e88cef0db9200c7f25aeceba8a86efbe09cc824f01a6d3163f7e937
+  sha256: 834d1a8e38496369390be699be9bca4f2a0f2175b50327272b2ec7a98ffda2a0
 
 build:
   number: 0
+  skip: True  # [py<36]
   noarch: python
   script: "{{ PYTHON }} -m pip install . --no-deps -vv"
   entry_points:
@@ -17,7 +18,7 @@ build:
 
 requirements:
   host:
-    - python >=3.6
+    - python
     - pip
     - setuptools
     - wheel
@@ -25,7 +26,7 @@ requirements:
     - python >=3.6
     - click
     - joblib
-    - regex
+    - regex >=2021.8.3
     - tqdm
 
 test:
@@ -57,6 +58,7 @@ test:
     - nltk.translate
     - nltk.twitter
   requires:
+    - python <3.10
     - pip
     # tqdm and click requires colorama
     - colorama  # [win]
