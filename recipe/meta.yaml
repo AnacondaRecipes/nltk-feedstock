@@ -10,9 +10,9 @@ source:
 
 build:
   number: 0
-  skip: True  # [py<36]
+  skip: True  # [py<37]
   noarch: python
-  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
   entry_points:
     - nltk = nltk.cli:cli
 
@@ -23,7 +23,7 @@ requirements:
     - setuptools
     - wheel
   run:
-    - python >=3.6
+    - python >=3.7
     - click
     - joblib
     - regex >=2021.8.3
@@ -58,7 +58,6 @@ test:
     - nltk.translate
     - nltk.twitter
   requires:
-    - python <3.10
     - pip
     # tqdm and click requires colorama
     - colorama  # [win]
@@ -67,9 +66,9 @@ test:
     - nltk -h
 
 about:
-  home: http://nltk.org/
+  home: https://nltk.org/
   license_file: LICENSE.txt
-  license: Apache 2.0
+  license: Apache-2.0
   license_family: Apache
   summary: 'Natural Language Toolkit'
   description: |
@@ -78,7 +77,7 @@ about:
     natural language.
   doc_source_url: https://github.com/nltk/nltk/blob/develop/web/index.rst
   dev_url: https://github.com/nltk/nltk
-  doc_url: http://www.nltk.org/
+  doc_url: https://www.nltk.org/
 
 extra:
   recipe-maintainers:
