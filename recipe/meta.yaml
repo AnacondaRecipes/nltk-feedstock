@@ -66,7 +66,7 @@ test:
     - nltk -h
 
 about:
-  home: https://nltk.org/
+  home: https://www.nltk.org/
   license_file: LICENSE.txt
   license: Apache-2.0
   license_family: Apache
@@ -75,7 +75,6 @@ about:
     NLTK has been called a wonderful tool for teaching and working in
     computational linguistics using Python and an amazing library to play with
     natural language.
-  doc_source_url: https://github.com/nltk/nltk/blob/develop/web/index.rst
   dev_url: https://github.com/nltk/nltk
   doc_url: https://www.nltk.org/
 
