@@ -1,18 +1,17 @@
 {% set name = "nltk" %}
-{% set version = "3.9.1" %}
-
+{% set version = "3.9.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 87d127bd3de4bd89a4f81265e5fa59cb1b199b27440175370f7417d2bc7ae868
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 0f409e9b069ca4177c1903c3e843eef90c7e92992fa4931ae607da6de49e1419
 
 build:
   number: 0
-  skip: True  # [py<38]
+  skip: true  # [py<39]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - nltk = nltk.cli:cli
