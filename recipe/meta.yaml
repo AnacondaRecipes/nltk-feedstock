@@ -50,10 +50,8 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
-{% set deselect_tests = " --deselect=nltk/test/unit/test_tag.py::test_basic" %}
-{% set deselect_tests = deselect_tests + " --deselect=nltk/test/unit/translate/test_meteor.py::TestMETEOR::test_meteor" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
 
 test:
   source_files:
@@ -96,7 +94,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -v nltk/test {{ ignore_tests }} {{ deselect_tests }} -k "not doctest"
+    - pytest -v nltk/test {{ ignore_tests }} -k "not doctest"
     - nltk -h
 
 about:
