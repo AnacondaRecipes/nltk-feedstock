@@ -29,7 +29,30 @@ requirements:
     - regex >=2021.8.3
     - tqdm
 
+# Tests which are using external resources:
+# E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
+# E         >>> import nltk
+# E         >>> nltk.download('x')
+{% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpus_views.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pl196x.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pos_tag.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_rte_classify.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stem.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tokenize.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_wordnet.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_bleu.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_nist.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_concordance.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json2csv_corpus.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
+
 test:
+  source_files:
+    - nltk/test
   imports:
     - nltk
     - nltk.app
@@ -61,12 +84,18 @@ test:
     - pip
     # tqdm and click requires colorama
     - colorama  # [win]
+    - pytest >=6.0.1
+    - numpy
+    - pytest-mock
+    - pyparsing
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -v nltk/test {{ ignore_tests }}  -k "not doctest"
     - nltk -h
 
 about:
-  home: https://www.nltk.org/
+  home: https://www.nltk.org
   license_file: LICENSE.txt
   license: Apache-2.0
   license_family: Apache
@@ -76,7 +105,7 @@ about:
     computational linguistics using Python and an amazing library to play with
     natural language.
   dev_url: https://github.com/nltk/nltk
-  doc_url: https://www.nltk.org/
+  doc_url: https://www.nltk.org
 
 extra:
   recipe-maintainers:
