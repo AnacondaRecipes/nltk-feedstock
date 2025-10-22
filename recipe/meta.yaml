@@ -1,18 +1,17 @@
 {% set name = "nltk" %}
-{% set version = "3.9.1" %}
-
+{% set version = "3.9.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 87d127bd3de4bd89a4f81265e5fa59cb1b199b27440175370f7417d2bc7ae868
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 0f409e9b069ca4177c1903c3e843eef90c7e92992fa4931ae607da6de49e1419
 
 build:
   number: 0
-  skip: True  # [py<38]
+  skip: true  # [py<39]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - nltk = nltk.cli:cli
@@ -30,7 +29,33 @@ requirements:
     - regex >=2021.8.3
     - tqdm
 
+# Tests which are using external resources:
+# E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
+# E         >>> import nltk
+# E         >>> nltk.download('x')
+{% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpus_views.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pl196x.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pos_tag.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_rte_classify.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stem.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tokenize.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_wordnet.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_bleu.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_nist.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_concordance.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json2csv_corpus.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
+
 test:
+  source_files:
+    - nltk/test
   imports:
     - nltk
     - nltk.app
@@ -62,12 +87,18 @@ test:
     - pip
     # tqdm and click requires colorama
     - colorama  # [win]
+    - pytest >=6.0.1
+    - numpy
+    - pytest-mock
+    - pyparsing
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -v nltk/test {{ ignore_tests }} -k "not doctest"
     - nltk -h
 
 about:
-  home: https://www.nltk.org/
+  home: https://www.nltk.org
   license_file: LICENSE.txt
   license: Apache-2.0
   license_family: Apache
@@ -77,7 +108,7 @@ about:
     computational linguistics using Python and an amazing library to play with
     natural language.
   dev_url: https://github.com/nltk/nltk
-  doc_url: https://www.nltk.org/
+  doc_url: https://www.nltk.org
 
 extra:
   recipe-maintainers:
