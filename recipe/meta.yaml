@@ -33,6 +33,7 @@ requirements:
 # E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
 # E         >>> import nltk
 # E         >>> nltk.download('x')
+# test_texttiling: stopwords corpus (nltk 3.9.4+)
 {% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
@@ -52,6 +53,7 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
 
 test:
   source_files:
