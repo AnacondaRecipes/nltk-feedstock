@@ -1,5 +1,5 @@
 {% set name = "nltk" %}
-{% set version = "3.9.3" %}
+{% set version = "3.9.4" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: cb5945d6424a98d694c2b9a0264519fab4363711065a46aa0ae7a2195b92e71f
+  sha256: ed03bc098a40481310320808b2db712d95d13ca65b27372f8a403949c8b523d0
 
 build:
   number: 0
@@ -33,6 +33,7 @@ requirements:
 # E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
 # E         >>> import nltk
 # E         >>> nltk.download('x')
+# test_texttiling: stopwords corpus (nltk 3.9.4+)
 {% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
@@ -52,6 +53,7 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
 
 test:
   source_files:
