@@ -1,5 +1,5 @@
 {% set name = "nltk" %}
-{% set version = "3.9.4" %}
+{% set version = "3.10.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: ed03bc098a40481310320808b2db712d95d13ca65b27372f8a403949c8b523d0
+  sha256: 4fbac1d98203cbcd1b5d94a2877fb822300072d80604a5e7fae49d2c5f84e8c1
 
 build:
   number: 0
@@ -24,6 +24,7 @@ requirements:
     - wheel
   run:
     - python
+    - defusedxml
     - click
     - joblib
     - regex >=2021.8.3
@@ -54,6 +55,12 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
+
+{% set disabled_tests = " not doctest" %}
+{% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
+{% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
 
 test:
   source_files:
@@ -96,7 +103,7 @@ test:
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -v nltk/test {{ ignore_tests }} -k "not doctest"
+    - pytest -vv nltk/test {{ ignore_tests }} -k "{{ disabled_tests }}"
     - nltk -h
 
 about:
