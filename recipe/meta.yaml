@@ -1,40 +1,5 @@
 {% set name = "nltk" %}
-{% set version = "3.10.0" %}
-
-package:
-  name: {{ name }}
-  version: {{ version }}
-
-source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 4fbac1d98203cbcd1b5d94a2877fb822300072d80604a5e7fae49d2c5f84e8c1
-
-build:
-  number: 0
-  skip: true  # [py<310]
-  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
-  entry_points:
-    - nltk = nltk.cli:cli
-
-requirements:
-  host:
-    - python
-    - pip
-    - setuptools
-    - wheel
-  run:
-    - python
-    - defusedxml
-    - click
-    - joblib
-    - regex >=2021.8.3
-    - tqdm
-
-# Tests which are using external resources:
-# E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
-# E         >>> import nltk
-# E         >>> nltk.download('x')
-# test_texttiling: stopwords corpus (nltk 3.9.4+)
+{% set version = "3.10.3" %}
 {% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
@@ -57,10 +22,43 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
-
 {% set disabled_tests = " not doctest" %}
 {% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
 {% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
+
+# Tests which are using external resources:
+# E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
+# E         >>> import nltk
+# E         >>> nltk.download('x')
+# test_texttiling: stopwords corpus (nltk 3.9.4+)
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: bb9327a461c3811c2fa4900e03840401f2126adfb30c0072827c433bd2444ea4
+
+build:
+  number: 0
+  skip: true  # [py<310]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  entry_points:
+    - nltk = nltk.cli:cli
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+    - defusedxml
+    - click
+    - joblib
+    - regex >=2021.8.3
+    - tqdm
 
 test:
   source_files:
