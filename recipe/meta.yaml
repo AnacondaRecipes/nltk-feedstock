@@ -57,6 +57,7 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
+
 {% set disabled_tests = " not doctest" %}
 {% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
 {% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
@@ -111,7 +112,7 @@ about:
   license_file: LICENSE.txt
   license: Apache-2.0
   license_family: Apache
-  summary: Natural Language Toolkit
+  summary: Natural Language Toolkit.
   description: |
     NLTK has been called a wonderful tool for teaching and working in
     computational linguistics using Python and an amazing library to play with
