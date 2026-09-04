@@ -64,6 +64,7 @@ requirements:
 test:
   source_files:
     - nltk/test
+    - nltk/parse
   imports:
     - nltk
     - nltk.app
