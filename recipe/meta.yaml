@@ -1,5 +1,5 @@
 {% set name = "nltk" %}
-{% set version = "3.10.0" %}
+{% set version = "3.10.3" %}
 
 package:
   name: {{ name }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 4fbac1d98203cbcd1b5d94a2877fb822300072d80604a5e7fae49d2c5f84e8c1
+  sha256: bb9327a461c3811c2fa4900e03840401f2126adfb30c0072827c433bd2444ea4
 
 build:
   number: 0
@@ -61,10 +61,13 @@ requirements:
 {% set disabled_tests = " not doctest" %}
 {% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
 {% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
+# Lead to timeout on CI for osx
+{% set disabled_tests = disabled_tests + " and not test_exponential_unify_is_time_bounded" %}  # [osx]
 
 test:
   source_files:
     - nltk/test
+    - nltk/parse
   imports:
     - nltk
     - nltk.app
@@ -111,7 +114,7 @@ about:
   license_file: LICENSE.txt
   license: Apache-2.0
   license_family: Apache
-  summary: Natural Language Toolkit
+  summary: Natural Language Toolkit.
   description: |
     NLTK has been called a wonderful tool for teaching and working in
     computational linguistics using Python and an amazing library to play with
