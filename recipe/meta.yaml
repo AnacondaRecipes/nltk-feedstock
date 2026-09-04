@@ -1,36 +1,6 @@
 {% set name = "nltk" %}
 {% set version = "3.10.3" %}
-{% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpus_views.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pl196x.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pos_tag.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_rte_classify.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stem.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tokenize.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_wordnet.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_bleu.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_nist.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_concordance.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json2csv_corpus.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
-{% set disabled_tests = " not doctest" %}
-{% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
-{% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
 
-# Tests which are using external resources:
-# E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
-# E         >>> import nltk
-# E         >>> nltk.download('x')
-# test_texttiling: stopwords corpus (nltk 3.9.4+)
 package:
   name: {{ name }}
   version: {{ version }}
@@ -59,6 +29,37 @@ requirements:
     - joblib
     - regex >=2021.8.3
     - tqdm
+
+# Tests which are using external resources:
+# E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
+# E         >>> import nltk
+# E         >>> nltk.download('x')
+# test_texttiling: stopwords corpus (nltk 3.9.4+)
+{% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpus_views.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pl196x.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pos_tag.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_rte_classify.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stem.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tokenize.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_wordnet.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_bleu.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_nist.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_concordance.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json2csv_corpus.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
+{% set disabled_tests = " not doctest" %}
+{% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
+{% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
 
 test:
   source_files:
