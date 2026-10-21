@@ -1,5 +1,5 @@
 {% set name = "nltk" %}
-{% set version = "3.10.3" %}
+{% set version = "3.10.4" %}
 
 package:
   name: {{ name }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: bb9327a461c3811c2fa4900e03840401f2126adfb30c0072827c433bd2444ea4
+  sha256: 44679f4e9220abfd496d2c8cdb22f8425ccbe557604f9aa5cacb1c44003dabc1
 
 build:
   number: 0
