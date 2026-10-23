@@ -57,17 +57,69 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
+# stopwords corpus, not fetched in CI
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stopwords_extended.py" %}
+# upstream runs the advisory probes only on its full matrix (minutes per cell)
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_advisory_probes.py" %}
+# needs the third-party CoreNLP jars upstream's CI installs
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corenlp.py" %}
+# pre-commit guard harness; loads tools/ from a source checkout (not in the wheel)
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_spawn_chokepoint_hook.py" %}
+# doctests needing downloaded corpora (CI fetches no nltk_data); corpus.doctest
+# also needs mdit-plain, not on pkgs/main
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/bnc.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/childes.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/classify.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/collocations.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/concordance.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/corpus.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/crubadan.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/data.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/dependency.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/drt.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/featgram.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/framenet.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/gluesemantics.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/grammartestsuites.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/japanese.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/lm.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/meteor.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/parse.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/probability.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/propbank.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/relextract.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/semantics.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiwordnet.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiment.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/stem.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/tag.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/tokenize.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/translate.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/tree.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet_lch.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/wsd.doctest" %}
 
-{% set disabled_tests = " not doctest" %}
-{% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
-{% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
+# deselections are rootdir-relative (rootdir is the installed .../nltk/test)
+{% set deselect_tests = " --deselect=unit/test_attack_internals_env_readstr_expanded.py::test_real_jvm_child_sees_only_the_scrubbed_environment" %}
+# bare `import requests` inside the test; upstream gets it via twython
+# (transitively), which is not on pkgs/main
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestCoreNLPServerError::test_raises_when_the_server_never_becomes_reachable" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestCoreNLPServerError::test_sink_guard_refuses_a_hostile_option_before_any_launch" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestTransform::test_feeds_a_valid_dependencygraph" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_java_wrapper_text_output.py::test_corenlp_server_start_error_handles_str_stderr" %}
+# windows-named path handling tests; they run on win
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_platform_detection.py::test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_platform_detection.py::test_windows_data_paths_include_appdata" %}  # [not win]
 # Lead to timeout on CI for osx
-{% set disabled_tests = disabled_tests + " and not test_exponential_unify_is_time_bounded" %}  # [osx]
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_recursion_dos.py::TestResolutionUnifyDoS::test_exponential_unify_is_time_bounded" %}  # [osx]
+# charged == wall equality for a sleeping child flaked on AR osx CI under
+# parallel workers; upstream runs it on GitHub macOS runners
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_timing.py::test_a_child_over_budget_fails_whether_it_spins_or_sleeps" %}  # [osx]
 
 test:
   source_files:
     - nltk/test
-    - nltk/parse
   imports:
     - nltk
     - nltk.app
@@ -90,8 +142,6 @@ test:
     - nltk.tag
     - nltk.tbl
     - nltk.test
-    - nltk.test.unit
-    - nltk.test.unit.translate
     - nltk.tokenize
     - nltk.translate
     - nltk.twitter
@@ -102,11 +152,23 @@ test:
     - pytest >=6.0.1
     - numpy
     - pytest-mock
+    - pytest-xdist
     - pyparsing
+    # upstream requirements-ci.txt: yaml-bomb/allowlist attack tests import yaml
+    - pyyaml
+    # gensim is NOT added: gensim.doctest needs the brown corpus, which the
+    # no-data CI regime does not fetch, so the file keeps skipping as before.
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -vv nltk/test {{ ignore_tests }} -k "{{ disabled_tests }}"
+    # Stage the source test tree (incl. nltk/test/unit, which the wheel
+    # excludes) onto the installed package, then run pytest from there so
+    # `import nltk` resolves to the built artifact, not $SRC_DIR.
+    - python -c "import os, shutil, sysconfig; shutil.copytree(os.path.join(os.environ['SRC_DIR'], 'nltk', 'test'), os.path.join(sysconfig.get_paths()['purelib'], 'nltk', 'test'), dirs_exist_ok=True)"
+    # -n auto/-rsx match upstream's CI invocation; no -vv (at verbosity >= 1
+    # the terminal reporter crashes on tests that monkeypatch os.name)
+    - cd "$SP_DIR" && pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [unix]
+    - cd /d "%SP_DIR%" && pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [win]
     - nltk -h
 
 about:
