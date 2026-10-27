@@ -99,6 +99,11 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet_lch.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/wsd.doctest" %}
+# chat80.doctest needs the chat80 and city_database corpora (not fetched in CI)
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/chat80.doctest" %}
+# toolbox.doctest writes a tempfile under /tmp, which nltk's own pathsec sandbox
+# rejects as an unauthorized path (PermissionError), so open() never succeeds
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/toolbox.doctest" %}
 
 # deselections are rootdir-relative (rootdir is the installed .../nltk/test)
 {% set deselect_tests = " --deselect=unit/test_attack_internals_env_readstr_expanded.py::test_real_jvm_child_sees_only_the_scrubbed_environment" %}
@@ -108,6 +113,26 @@ requirements:
 {% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestCoreNLPServerError::test_sink_guard_refuses_a_hostile_option_before_any_launch" %}
 {% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestTransform::test_feeds_a_valid_dependencygraph" %}
 {% set deselect_tests = deselect_tests + " --deselect=unit/test_java_wrapper_text_output.py::test_corenlp_server_start_error_handles_str_stderr" %}
+# Tests needing nltk_data packages (punkt_tab, stopwords, chat80, city_database,
+# averaged_perceptron_tagger_eng, gutenberg, perluniprops). They fail with
+# `LookupError: Resource 'x' not found`; CI does not fetch nltk_data (downloads
+# are not available there), so they are deselected.
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_chat80_val_round_trip.py::test_val_dump_writes_a_sorted_manifest_of_every_key" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_corpus_reader_pathsec.py::test_guard_fileid_plaintext_fs_reads" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_corpus_reader_pathsec.py::test_guard_fileid_zip_backed_reads" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_eval_avoidance_security.py::test_texttiling_every_window_on_real_brown_gap_scores" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_full_functionality_smoke.py::test_plaintext_and_tagged_corpus_readers_in_root" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_full_functionality_smoke.py::test_text_concordance_collocations_findall" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_print_routing_end_to_end.py::TestTextSinks::test_similar_and_collocations_run_clean" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_print_routing_end_to_end.py::TestUtilityAndCliSinks::test_cli_tokenize_stream_escapes_control_characters" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_model_artifact_pathsec.py::TestResourceNameSteering::test_pos_tag_rejects_an_unknown_language" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_quadratic_dos.py::TestTextTilingDoS::test_oversized_document_is_bounded" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_quadratic_dos.py::TestLeporAlignmentQuadratic::test_correctness_preserved" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_safe_print_routing.py::TestImportTimeFallbacksRunForReal::test_every_module_imports_with_every_optional_dependency_blocked" %}
+# twython (and requests, which upstream gets through it) is not on pkgs/main,
+# so these twitter tests cannot import their dependencies
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_operator_path_opens_regression.py::test_tweetwriter_output_works_outside_data_roots" %}
+{% set deselect_tests = deselect_tests + " --deselect=unit/test_operator_path_opens_regression.py::test_twitter_creds_read_outside_data_roots" %}
 # windows-named path handling tests; they run on win
 {% set deselect_tests = deselect_tests + " --deselect=unit/test_platform_detection.py::test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
 {% set deselect_tests = deselect_tests + " --deselect=unit/test_platform_detection.py::test_windows_data_paths_include_appdata" %}  # [not win]
@@ -156,6 +181,8 @@ test:
     - pyparsing
     # upstream requirements-ci.txt: yaml-bomb/allowlist attack tests import yaml
     - pyyaml
+    # twython is NOT added: it is not available on pkgs/main, so the twitter
+    # tests needing it (and requests) are deselected above.
     # gensim is NOT added: gensim.doctest needs the brown corpus, which the
     # no-data CI regime does not fetch, so the file keeps skipping as before.
   commands:
