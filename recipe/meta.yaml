@@ -181,6 +181,13 @@ test:
     - pyparsing
     # upstream requirements-ci.txt: yaml-bomb/allowlist attack tests import yaml
     - pyyaml
+    # optional deps from upstream requirements-ci.txt / extras.
+    # test-only, so they are not run requirements.
+    - pandas
+    - scipy
+    - scikit-learn
+    - matplotlib
+    - python-crfsuite
     # twython is NOT added: it is not available on pkgs/main, so the twitter
     # tests needing it (and requests) are deselected above.
     # gensim is NOT added: gensim.doctest needs the brown corpus, which the
@@ -194,8 +201,9 @@ test:
     - python -c "import os, shutil, sysconfig; shutil.copytree(os.path.join(os.environ['SRC_DIR'], 'nltk', 'test'), os.path.join(sysconfig.get_paths()['purelib'], 'nltk', 'test'), dirs_exist_ok=True)"
     # -n auto/-rsx match upstream's CI invocation; no -vv (at verbosity >= 1
     # the terminal reporter crashes on tests that monkeypatch os.name)
-    - cd "$SP_DIR" && pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [unix]
-    - cd /d "%SP_DIR%" && pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [win]
+    # MPLBACKEND=Agg: matplotlib needs a headless backend on CI (no display)
+    - cd "$SP_DIR" && MPLBACKEND=Agg pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [unix]
+    - cd /d "%SP_DIR%" && set "MPLBACKEND=Agg" && pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [win]
     - nltk -h
 
 about:
