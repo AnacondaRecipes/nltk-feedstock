@@ -30,48 +30,29 @@ requirements:
     - regex >=2021.8.3
     - tqdm
 
-# Tests which are using external resources:
+# The tests are the ones installed with the package, by choice. The wheel
+# ships only some of nltk's tests: the doctests (nltk/test/*.doctest),
+# conftest.py and a few fixtures. It does not ship nltk/test/unit (the unit
+# tests, excluded in upstream's setup.py) or nltk/test/pytest.ini (so the
+# doctest options are passed on the command line below), and it lacks a few
+# data files some doctests read (e.g. FX8.xml). Running only what is
+# installed keeps the test requirements to pytest and pytest-mock; the unit
+# tests would need numpy, pyparsing, pyyaml, scikit-learn, python-crfsuite,
+# pytest-xdist, ... and a long list of ignored/deselected tests.
+#
+# The doctests below are ignored because they fail here:
 # E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
 # E         >>> import nltk
 # E         >>> nltk.download('x')
-# test_texttiling: stopwords corpus (nltk 3.9.4+)
-{% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpus_views.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pl196x.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pos_tag.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_rte_classify.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stem.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tokenize.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_wordnet.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_bleu.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_nist.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_concordance.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json2csv_corpus.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
-# stopwords corpus, not fetched in CI
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stopwords_extended.py" %}
-# upstream runs the advisory probes only on its full matrix (minutes per cell)
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_advisory_probes.py" %}
-# needs the third-party CoreNLP jars upstream's CI installs
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corenlp.py" %}
-# pre-commit guard harness; loads tools/ from a source checkout (not in the wheel)
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_spawn_chokepoint_hook.py" %}
-# doctests needing downloaded corpora (CI fetches no nltk_data); corpus.doctest
-# also needs mdit-plain, not on pkgs/main
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/bnc.doctest" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/childes.doctest" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/classify.doctest" %}
+# i.e. they need nltk_data corpora/models, which CI does not fetch (upstream's
+# CI runs nltk.download('all')); exceptions are noted next to each.
+# bnc.doctest reads FX8.xml, which the wheel does not include
+{% set ignore_tests = " --ignore=nltk/test/bnc.doctest" %}
+# chat80.doctest needs the chat80 and city_database corpora
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/chat80.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/collocations.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/concordance.doctest" %}
+# corpus.doctest also needs mdit-plain, not on pkgs/main
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/corpus.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/crubadan.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/data.doctest" %}
@@ -85,86 +66,25 @@ requirements:
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/lm.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/meteor.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/parse.doctest" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/probability.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/propbank.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/relextract.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/semantics.doctest" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiwordnet.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiment.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiwordnet.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/stem.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/tag.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/tokenize.doctest" %}
+# toolbox.doctest writes a tempfile under /tmp, which nltk's own pathsec
+# sandbox rejects as an unauthorized path (PermissionError), so open() never
+# succeeds (it passes where the temp dir is private, e.g. macOS)
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/toolbox.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/translate.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/tree.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet_lch.doctest" %}
 {% set ignore_tests = ignore_tests + " --ignore=nltk/test/wsd.doctest" %}
-# chat80.doctest needs the chat80 and city_database corpora (not fetched in CI)
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/chat80.doctest" %}
-# toolbox.doctest writes a tempfile under /tmp, which nltk's own pathsec sandbox
-# rejects as an unauthorized path (PermissionError), so open() never succeeds
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/toolbox.doctest" %}
-
-# deselections are rootdir-relative (rootdir is the installed .../nltk/test)
-{% set deselect_tests = " --deselect=unit/test_attack_internals_env_readstr_expanded.py::test_real_jvm_child_sees_only_the_scrubbed_environment" %}
-# bare `import requests` inside the test; upstream gets it via twython
-# (transitively), which is not on pkgs/main
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestCoreNLPServerError::test_raises_when_the_server_never_becomes_reachable" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestCoreNLPServerError::test_sink_guard_refuses_a_hostile_option_before_any_launch" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_corenlp_options_security.py::TestTransform::test_feeds_a_valid_dependencygraph" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_java_wrapper_text_output.py::test_corenlp_server_start_error_handles_str_stderr" %}
-# Tests needing nltk_data packages (punkt_tab, stopwords, chat80, city_database,
-# averaged_perceptron_tagger_eng, gutenberg, perluniprops). They fail with
-# `LookupError: Resource 'x' not found`; CI does not fetch nltk_data (downloads
-# are not available there), so they are deselected.
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_chat80_val_round_trip.py::test_val_dump_writes_a_sorted_manifest_of_every_key" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_corpus_reader_pathsec.py::test_guard_fileid_plaintext_fs_reads" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_corpus_reader_pathsec.py::test_guard_fileid_zip_backed_reads" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_eval_avoidance_security.py::test_texttiling_every_window_on_real_brown_gap_scores" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_full_functionality_smoke.py::test_plaintext_and_tagged_corpus_readers_in_root" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_full_functionality_smoke.py::test_text_concordance_collocations_findall" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_print_routing_end_to_end.py::TestTextSinks::test_similar_and_collocations_run_clean" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_print_routing_end_to_end.py::TestUtilityAndCliSinks::test_cli_tokenize_stream_escapes_control_characters" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_model_artifact_pathsec.py::TestResourceNameSteering::test_pos_tag_rejects_an_unknown_language" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_quadratic_dos.py::TestTextTilingDoS::test_oversized_document_is_bounded" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_quadratic_dos.py::TestLeporAlignmentQuadratic::test_correctness_preserved" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_safe_print_routing.py::TestImportTimeFallbacksRunForReal::test_every_module_imports_with_every_optional_dependency_blocked" %}
-# twython (and requests, which upstream gets through it) is not on pkgs/main,
-# so these twitter tests cannot import their dependencies
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_operator_path_opens_regression.py::test_tweetwriter_output_works_outside_data_roots" %}
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_operator_path_opens_regression.py::test_twitter_creds_read_outside_data_roots" %}
-# The "other-owner" case fakes a foreign file owner by matching the archive's
-# (st_dev, st_ino, st_ctime_ns) in patched os.stat. It failed on aarch64 py311
-# CI: the stand-in apparently keeps matching after the archive is re-downloaded
-# (inode reuse + coarse ctime), so the extraction is refused ("Refusing to
-# extract an archive that another account owns"). The group- and world-writable
-# cases pass, and it passed on x86_64 py310, but it depends on filesystem
-# behavior and may fail again on other platforms, so it is deselected everywhere.
-{% set deselect_tests = deselect_tests + " --deselect='unit/test_attack_downloader_trust_expanded.py::TestTheInstallerSide::test_an_archive_others_can_write_is_stale_and_replaced[other-owner]'" %}  # [unix]
-# the test's gadget runs `os.system("touch <marker>")` and asserts the marker
-# file exists; `touch` is not a Windows command (cmd: "'touch' is not
-# recognized"), so the assertion fails even though the code is fine
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_pickle_allowlist_security.py::TestExtensionOpcodeBypassBlocked::test_ext_scan_is_load_bearing" %}  # [win]
-# Both tests assert that on CPython >= 3.12 a JSON document nested JSON_MAX_DEPTH
-# (2000) deep is parsed by the C accelerator. CPython 3.13 caps C recursion at
-# Py_C_RECURSION_LIMIT, which is 1000 on win-arm64 only (3000 on other Windows,
-# 10000 on Linux). 3.12 has no arm64 special case and 3.14 dropped the constant
-# for stack-based checks, so only py313 on win-arm64 hits it. nltk behaves
-# correctly (bounded ValueError, no crash); the tests' expectation is too high.
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_attack_jsontags_candidates_expanded.py::test_depth_exactly_at_limit_is_handled_per_interpreter" %}  # [win and arm64 and py==313]
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_attack_jsontags_candidates_expanded.py::TestNoRecursionErrorLeak::test_full_depth_document_at_the_cap_is_handled_per_interpreter" %}  # [win and arm64 and py==313]
-# windows-named path handling tests; they run on win
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_platform_detection.py::test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_platform_detection.py::test_windows_data_paths_include_appdata" %}  # [not win]
-# Lead to timeout on CI for osx
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_recursion_dos.py::TestResolutionUnifyDoS::test_exponential_unify_is_time_bounded" %}  # [osx]
-# charged == wall equality for a sleeping child flaked on AR osx CI under
-# parallel workers; upstream runs it on GitHub macOS runners
-{% set deselect_tests = deselect_tests + " --deselect=unit/test_timing.py::test_a_child_over_budget_fails_whether_it_spins_or_sleeps" %}  # [osx]
 
 test:
-  source_files:
-    - nltk/test
   imports:
     - nltk
     - nltk.app
@@ -195,35 +115,20 @@ test:
     # tqdm and click requires colorama
     - colorama  # [win]
     - pytest >=6.0.1
-    - numpy
+    # nltk/test/conftest.py has an autouse fixture that uses `mocker`
     - pytest-mock
-    - pytest-xdist
-    - pyparsing
-    # upstream requirements-ci.txt: yaml-bomb/allowlist attack tests import yaml
-    - pyyaml
-    # optional deps from upstream requirements-ci.txt / extras.
-    # test-only, so they are not run requirements.
-    - pandas
-    - scipy
-    - scikit-learn
-    - matplotlib
-    - python-crfsuite
-    # twython is NOT added: it is not available on pkgs/main, so the twitter
-    # tests needing it (and requests) are deselected above.
-    # gensim is NOT added: gensim.doctest needs the brown corpus, which the
-    # no-data CI regime does not fetch, so the file keeps skipping as before.
+    # Not added: numpy, pyparsing, pyyaml, scikit-learn, python-crfsuite,
+    # twython, gensim. With them the installed tests gain at most one doctest
+    # (metrics.doctest, numpy); the rest only matter for the unit tests, which
+    # the wheel does not include.
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    # Stage the source test tree (incl. nltk/test/unit, which the wheel
-    # excludes) onto the installed package, then run pytest from there so
-    # `import nltk` resolves to the built artifact, not $SRC_DIR.
-    - python -c "import os, shutil, sysconfig; shutil.copytree(os.path.join(os.environ['SRC_DIR'], 'nltk', 'test'), os.path.join(sysconfig.get_paths()['purelib'], 'nltk', 'test'), dirs_exist_ok=True)"
-    # -n auto/-rsx match upstream's CI invocation; no -vv (at verbosity >= 1
-    # the terminal reporter crashes on tests that monkeypatch os.name)
-    # MPLBACKEND=Agg: matplotlib needs a headless backend on CI (no display)
-    - cd "$SP_DIR" && MPLBACKEND=Agg pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [unix]
-    - cd /d "%SP_DIR%" && set "MPLBACKEND=Agg" && pytest -rsx -n auto nltk/test {{ ignore_tests }} {{ deselect_tests }}  # [win]
+    # Run the installed tests from site-packages so `import nltk` resolves to
+    # the built artifact. The doctest options normally come from the
+    # pytest.ini that the wheel lacks (see above), hence the explicit flags.
+    - cd "$SP_DIR" && pytest -rsx "--doctest-glob=*.doctest" --doctest-continue-on-failure -o "doctest_optionflags=ELLIPSIS NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL" nltk/test {{ ignore_tests }}  # [unix]
+    - cd /d "%SP_DIR%" && pytest -rsx "--doctest-glob=*.doctest" --doctest-continue-on-failure -o "doctest_optionflags=ELLIPSIS NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL" nltk/test {{ ignore_tests }}  # [win]
     - nltk -h
 
 about:
