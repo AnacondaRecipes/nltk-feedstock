@@ -1,5 +1,5 @@
 {% set name = "nltk" %}
-{% set version = "3.10.3" %}
+{% set version = "3.10.4" %}
 
 package:
   name: {{ name }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: bb9327a461c3811c2fa4900e03840401f2126adfb30c0072827c433bd2444ea4
+  sha256: 44679f4e9220abfd496d2c8cdb22f8425ccbe557604f9aa5cacb1c44003dabc1
 
 build:
   number: 0
@@ -30,44 +30,61 @@ requirements:
     - regex >=2021.8.3
     - tqdm
 
-# Tests which are using external resources:
+# The tests are the ones installed with the package, by choice. The wheel
+# ships only some of nltk's tests: the doctests (nltk/test/*.doctest),
+# conftest.py and a few fixtures. It does not ship nltk/test/unit (the unit
+# tests, excluded in upstream's setup.py) or nltk/test/pytest.ini (so the
+# doctest options are passed on the command line below), and it lacks a few
+# data files some doctests read (e.g. FX8.xml). Running only what is
+# installed keeps the test requirements to pytest and pytest-mock; the unit
+# tests would need numpy, pyparsing, pyyaml, scikit-learn, python-crfsuite,
+# pytest-xdist, ... and a long list of ignored/deselected tests.
+#
+# The doctests below are ignored because they fail here:
 # E         Resource 'x' not found. Please use the NLTK Downloader to obtain the resource:
 # E         >>> import nltk
 # E         >>> nltk.download('x')
-# test_texttiling: stopwords corpus (nltk 3.9.4+)
-{% set ignore_tests = " --ignore=nltk/test/unit/test_brill.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfd_mutation.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_cfg2chomsky.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpus_views.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pl196x.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_pos_tag.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_rte_classify.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_stem.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tokenize.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_wordnet.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_bleu.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_nist.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_concordance.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json2csv_corpus.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_corpora.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_nombank.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_json_serialization.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/translate/test_meteor.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_tag.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_texttiling.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_ieer.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=nltk/test/unit/test_langnames.py" %}
-
-{% set disabled_tests = " not doctest" %}
-{% set disabled_tests = disabled_tests + " and not test_normalize_resource_name_treats_nt_as_windows" %}  # [not win]
-{% set disabled_tests = disabled_tests + " and not test_windows_data_paths_include_appdata" %}  # [not win]
-# Lead to timeout on CI for osx
-{% set disabled_tests = disabled_tests + " and not test_exponential_unify_is_time_bounded" %}  # [osx]
+# i.e. they need nltk_data corpora/models, which CI does not fetch (upstream's
+# CI runs nltk.download('all')); exceptions are noted next to each.
+# bnc.doctest reads FX8.xml, which the wheel does not include
+{% set ignore_tests = " --ignore=nltk/test/bnc.doctest" %}
+# chat80.doctest needs the chat80 and city_database corpora
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/chat80.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/collocations.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/concordance.doctest" %}
+# corpus.doctest also needs mdit-plain, not on pkgs/main
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/corpus.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/crubadan.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/data.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/dependency.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/drt.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/featgram.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/framenet.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/gluesemantics.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/grammartestsuites.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/japanese.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/lm.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/meteor.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/parse.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/propbank.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/relextract.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/semantics.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiment.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/sentiwordnet.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/stem.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/tag.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/tokenize.doctest" %}
+# toolbox.doctest writes a tempfile under /tmp, which nltk's own pathsec
+# sandbox rejects as an unauthorized path (PermissionError), so open() never
+# succeeds (it passes where the temp dir is private, e.g. macOS)
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/toolbox.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/translate.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/tree.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/wordnet_lch.doctest" %}
+{% set ignore_tests = ignore_tests + " --ignore=nltk/test/wsd.doctest" %}
 
 test:
-  source_files:
-    - nltk/test
-    - nltk/parse
   imports:
     - nltk
     - nltk.app
@@ -90,8 +107,6 @@ test:
     - nltk.tag
     - nltk.tbl
     - nltk.test
-    - nltk.test.unit
-    - nltk.test.unit.translate
     - nltk.tokenize
     - nltk.translate
     - nltk.twitter
@@ -100,13 +115,20 @@ test:
     # tqdm and click requires colorama
     - colorama  # [win]
     - pytest >=6.0.1
-    - numpy
+    # nltk/test/conftest.py has an autouse fixture that uses `mocker`
     - pytest-mock
-    - pyparsing
+    # Not added: numpy, pyparsing, pyyaml, scikit-learn, python-crfsuite,
+    # twython, gensim. With them the installed tests gain at most one doctest
+    # (metrics.doctest, numpy); the rest only matter for the unit tests, which
+    # the wheel does not include.
   commands:
     - pip check
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -vv nltk/test {{ ignore_tests }} -k "{{ disabled_tests }}"
+    # Run the installed tests from site-packages so `import nltk` resolves to
+    # the built artifact. The doctest options normally come from the
+    # pytest.ini that the wheel lacks (see above), hence the explicit flags.
+    - cd "$SP_DIR" && pytest -rsx "--doctest-glob=*.doctest" --doctest-continue-on-failure -o "doctest_optionflags=ELLIPSIS NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL" nltk/test {{ ignore_tests }}  # [unix]
+    - cd /d "%SP_DIR%" && pytest -rsx "--doctest-glob=*.doctest" --doctest-continue-on-failure -o "doctest_optionflags=ELLIPSIS NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL" nltk/test {{ ignore_tests }}  # [win]
     - nltk -h
 
 about:
